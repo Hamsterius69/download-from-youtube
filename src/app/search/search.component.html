@@ -1,0 +1,13 @@
+<div class='container mt-10'>
+  <input type='search' autocomplete='off' placeholder='URL youtube video' [(ngModel)]='searchData.url' (keydown.Enter)='updateURL()'
+         class='placeholder:italic placeholder:text-slate-400 focus:outline-none w-48 sm:w-80 leading-8 px-4 rounded' />
+  <select [(ngModel)]='searchData.type' class='h-8 rounded ml-2'>
+    <option value='video'>video</option>
+    <option value='mp3'>mp3</option>
+  </select>
+  <button (click)='updateURL()'
+    class='bg-transparent hover:border-gray-700 border border-gray-400 ml-2 py-1 px-4 rounded b-1 active:bg-gradient-to-r from-green-400 to-blue-500'>
+    <!-- <svg class="motion-reduce:hidden animate-spin ..." ></svg> -->
+    search
+  </button>
+</div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-// import { DownloadFileService } from './download-file.service';
-// import { SearchData } from './search/searchData.model';
+import { DownloadFileService } from './download-file.service';
+import { SearchData } from './search/searchData.model';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +9,10 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  // constructor (private downloadFileService :DownloadFileService) {
+  constructor (private downloadFileService :DownloadFileService) {
+  }
 
-  // }
-
-  // searchURL(searchData: SearchData): void {
-  //   this.downloadFileService.createProcess(searchData);
-  // }
+  searchURL(searchData: SearchData): void {
+    this.downloadFileService.createProcess(searchData);
+  }
 }

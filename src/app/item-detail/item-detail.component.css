@@ -3,7 +3,7 @@
   margin-top: 100px;
 }
 .spin {
-  border: 3px solid cadetblue;
+  border: 3px solid rgb(6 182 212);;
   width: 200px;
   height: 200px;
   margin: 0 auto;
@@ -13,7 +13,7 @@
   animation: rotate 2s cubic-bezier(0.26, 1.36, 0.74, -0.29) infinite;
 }
 #loader2 {
-  border: 3px solid steelblue;
+  border: 3px solid rgb(8 145 178);
   width: 220px;
   height: 220px;
   position: relative;
@@ -23,7 +23,7 @@
   animation: rotate2 2s cubic-bezier(0.26, 1.36, 0.74, -0.29) infinite;
 }
 #loader3 {
-  border: 3px solid deepskyblue;
+  border: 3px solid rgb(14 116 144);
   width: 240px;
   height: 240px;
   top: -442px;
@@ -33,7 +33,7 @@
   animation: rotate 2s cubic-bezier(0.26, 1.36, 0.74, -0.29) infinite;
 }
 #loader4 {
-  border: 3px solid royalblue;
+  border: 3px solid rgb(21 94 117);
   width: 260px;
   height: 260px;
   top: -693px;
@@ -59,7 +59,7 @@
   }
 }
 #text {
-  color: blue;
+  color: rgb(22 78 99);
   font-family: Arial;
   font-size: 15px;
   position: relative;
@@ -70,4 +70,24 @@
   width: 50%;
   height: 100px;
   text-align: center;
+}
+
+.download-btn {
+  background-color: rgb(4 120 87);
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+  width: 100px;
+  height: 30px;
+  border: 1px solid gray;
+}
+
+.prepare-btn {
+  background-color: whitesmoke;
+  border-radius: 4px;
+  text-align: center;
+  width: 120px;
+  height: 30px;
+  font-size: 12px;
+  border: 1px solid gray;
 }

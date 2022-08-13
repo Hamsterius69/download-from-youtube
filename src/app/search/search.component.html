@@ -5,7 +5,7 @@
     <option value='video'>video</option>
     <option value='mp3'>mp3</option>
   </select>
-  <button (click)='updateURL()' [disabled]='isLoading' [class]='isLoading ? "cursor-progress" : "cursor-pointer active:border-black"'>
+  <button (click)='updateURL()' [disabled]='isLoading' [class]='isLoading ? "custom-btn cursor-progress" : "custom-btn cursor-pointer"'>
     <div *ngIf='isLoading;else showBtn'>
       <svg class="mr-1 h-4 w-4 inline animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25 mx-0 px-0" cx="12" text-black cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

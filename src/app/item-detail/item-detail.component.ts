@@ -30,20 +30,17 @@ export class ItemDetailComponent implements OnInit {
     this.detailStatus$ = this.downloadFileService.getDetailStatus$();
   }
 
+  stringToHTML(str: string) : any {
+    var parser = new DOMParser();
+    return parser.parseFromString(str, 'text/html');
+  };
+
   ngOnInit(): void {
-    // this.isLoading$ = this.downloadFileService.getIsLoading$();
-    // this.isReady$ = this.downloadFileService.getIsReady$();
-    // this.detail$ = this.downloadFileService.getDetail$();
-    // this.detailStatus$ = this.downloadFileService.getDetailStatus$();
     this.isLoading$.subscribe(isLoading => this.isLoading = isLoading);
     this.isLoadingStatus$.subscribe(isLoadingStatus => this.isLoadingStatus = isLoadingStatus);
     this.isReady$.subscribe(isReady => this.isReady = isReady);
     this.detail$.subscribe(detail => this.detail = detail);
     this.detailStatus$.subscribe(detailStatus => this.detailStatus = detailStatus);
-  }
-
-  download(): void {
-    console.log('descargando ...');
   }
 
   prepareDownload() {

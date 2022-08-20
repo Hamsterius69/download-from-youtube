@@ -38,17 +38,14 @@ export class DownloadFileService {
     }
     this.http.get<any>(this.itemData.urlBase, { headers, params }).subscribe({
       next: data => {
-        console.log(data);
         if (data.status === 'complete') {
           this.isReady$.next(true);
           this.detailStatus$.next(data);
         } else {
           this.isReady$.next(false);
-          console.log("It's not ready, try again");
           window.alert("It's not ready, try again");
         }
         this.isLoadingStatus$.next(false);
-        console.log('termino');
       },
       error: error => {
         if (error.message) {
@@ -65,9 +62,8 @@ export class DownloadFileService {
   }
 
   createProcess(searchData: SearchData) :void {
+    this.resetData();
     this.isLoading$.next(true);
-    // this.isReady$.next(false);
-    // this.isLoadingStatus$.next(false);
     this.item = JSON.parse(JSON.stringify(searchData))
     const params = {
       format: this.item.type,
@@ -81,11 +77,9 @@ export class DownloadFileService {
     }
     this.http.get<any>(this.item.urlBase, { headers, params }).subscribe({
       next: data => {
-        console.log(data);
         data.format = params.format;
         this.guidId = data.guid;
         this.detail$.next(data);
-        console.log(data);
         this.isLoading$.next(false);
       },
       error: error => {
@@ -99,6 +93,34 @@ export class DownloadFileService {
         this.isLoading$.next(false);
       }
     });
+  }
+
+  resetData(): void {
+    this.isReady$.next(false);
+    this.isLoading$.next(false);
+    this.isLoadingStatus$.next(false);
+    /*
+    let auxYoutube = {
+      id: '',
+      definizione: '',
+      descrizione: '',
+      titolo: '',
+      thumbUrl: '',
+      licenza: '',
+      durata_video: '',
+      duration_original: '',
+      urlMp3: '',
+      urlVideo: '',
+    }
+    let auxDetail = {
+      status: '',
+      file: '',
+      total_percentage: 0,
+      YoutubeAPI: auxYoutube,
+    }
+    */
+    // this.detail$.next(auxDetail);
+    // this.detailStatus$.next(auxDetail);
   }
 
   getDetail$(): Observable<detail> {

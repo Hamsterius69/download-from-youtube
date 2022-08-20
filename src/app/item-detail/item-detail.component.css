@@ -66,6 +66,13 @@
   top: -857px;
 }
 
+.detail-text {
+  font-size: 12px;
+  font-family: Verdana, sans-serif;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 .detail-card {
   width: 50%;
   height: 100px;
@@ -77,8 +84,9 @@
   color: white;
   border-radius: 4px;
   text-align: center;
-  width: 100px;
+  width: 130px;
   height: 30px;
+  font-size: 12px;
   border: 1px solid gray;
 }
 

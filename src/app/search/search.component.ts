@@ -21,9 +21,9 @@ export class SearchComponent implements OnInit {
   }
 
   updateURL(): void {
-    // if (this.searchData.url) {
+    if (this.searchData.url) {
       this.downloadFileService.createProcess(this.searchData);
-    // }
+    }
   }
 
   ngOnInit(): void {

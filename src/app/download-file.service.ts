@@ -48,7 +48,10 @@ export class DownloadFileService {
         this.isLoadingStatus$.next(false);
       },
       error: error => {
-        if (error.message) {
+        if(error.error && error.error.message) {
+          console.error('There was an error!', error.error.message);
+          window.alert(error.error.message);
+        } else if (error.message) {
           console.error('There was an error!', error.message);
           window.alert(error.message);
         } else {
@@ -64,7 +67,7 @@ export class DownloadFileService {
   createProcess(searchData: SearchData) :void {
     this.resetData();
     this.isLoading$.next(true);
-    this.item = JSON.parse(JSON.stringify(searchData))
+    this.item = JSON.parse(JSON.stringify(searchData));
     const params = {
       format: this.item.type,
       responseFormat: this.item.responseFormat,
@@ -77,13 +80,17 @@ export class DownloadFileService {
     }
     this.http.get<any>(this.item.urlBase, { headers, params }).subscribe({
       next: data => {
+        console.log(data);
         data.format = params.format;
         this.guidId = data.guid;
         this.detail$.next(data);
         this.isLoading$.next(false);
       },
       error: error => {
-        if (error.message) {
+        if(error.error && error.error.message) {
+          console.error('There was an error!', error.error.message);
+          window.alert(error.error.message);
+        } else if (error.message) {
           console.error('There was an error!', error.message);
           window.alert(error.message);
         } else {

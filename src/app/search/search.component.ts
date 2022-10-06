@@ -23,6 +23,8 @@ export class SearchComponent implements OnInit {
   updateURL(): void {
     if (this.searchData.url) {
       this.downloadFileService.createProcess(this.searchData);
+    } else {
+      window.alert('You must add an ULR');
     }
   }
 

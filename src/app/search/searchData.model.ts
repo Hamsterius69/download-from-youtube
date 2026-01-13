@@ -1,27 +1,19 @@
 export class SearchData {
   url: string;
   type: string;
-  responseFormat: string;
-  lang: string;
   urlBase: string;
   constructor(url:string, type:string) {
     this.url = url;
     this.type = type;
-    this.responseFormat = 'json';
-    this.lang = 'en';
-    this.urlBase = 'https://t-one-youtube-converter.p.rapidapi.com/api/v1/createProcess';
+    this.urlBase = 'https://youtube-media-downloader.p.rapidapi.com/v2/video/details';
   }
 }
 
 export class StatusProcess {
   guid: string;
-  responseFormat: string;
-  lang: string;
   urlBase: string;
   constructor(guid:string) {
     this.guid = guid;
-    this.responseFormat = 'json';
-    this.lang = 'en';
-    this.urlBase = 'https://t-one-youtube-converter.p.rapidapi.com/api/v1/statusProcess';
+    this.urlBase = 'https://youtube-media-downloader.p.rapidapi.com/v2/video/details';
   }
 }

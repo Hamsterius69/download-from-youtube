@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  rapidapi: {
+    key: 'YOUR_RAPIDAPI_KEY_HERE',
+    host: 'youtube-media-downloader.p.rapidapi.com'
+  }
 };
 
 /*

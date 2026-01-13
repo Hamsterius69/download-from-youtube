@@ -2,6 +2,34 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
 
+A simple Angular application to download YouTube videos and audio (MP3) using the YouTube Media Downloader API from RapidAPI.
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure API Key
+
+This project uses the [YouTube Media Downloader API](https://rapidapi.com/DataFanatic/api/youtube-media-downloader) from RapidAPI.
+
+1. Create a free account on [RapidAPI](https://rapidapi.com/)
+2. Subscribe to the [YouTube Media Downloader API](https://rapidapi.com/DataFanatic/api/youtube-media-downloader) (free plan available)
+3. Copy your API key
+4. Create environment files from the examples:
+
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+cp src/environments/environment.prod.example.ts src/environments/environment.prod.ts
+```
+
+5. Edit both files and replace `YOUR_RAPIDAPI_KEY_HERE` with your actual API key
+
+**Note:** Never commit your actual API keys to the repository. The `environment.ts` and `environment.prod.ts` files are ignored by git.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

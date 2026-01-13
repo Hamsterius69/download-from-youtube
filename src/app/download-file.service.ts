@@ -3,6 +3,7 @@ import { SearchData, StatusProcess } from './search/searchData.model';
 import { Observable, Subject, map} from 'rxjs';
 import { detail } from './item-detail/detail.model';
 import { HttpClient } from "@angular/common/http";
+import { environment } from '../environments/environment';
 import * as _ from 'lodash';
 
 @Injectable({
@@ -26,60 +27,77 @@ export class DownloadFileService {
   }
 
   statusProcess(): void {
+    // With the new API, the download URL is already available from the first call
+    // So we just mark it as ready
     this.isLoadingStatus$.next(true);
-    const headers = {
-      'X-RapidAPI-Key': '59fe1defa6msh9e272bf9f215112p1e2fcajsn2c3687b8684a',
-      'X-RapidAPI-Host': 't-one-youtube-converter.p.rapidapi.com'
-    }
-    const params = {
-      guid: this.guidId,
-      responseFormat: this.itemData.responseFormat,
-      lang: this.itemData.lang
-    }
-    this.http.get<any>(this.itemData.urlBase, { headers, params }).subscribe({
-      next: data => {
-        if (data.status === 'complete') {
-          this.isReady$.next(true);
-          this.detailStatus$.next(data);
-        } else {
-          this.isReady$.next(false);
-          window.alert("It's not ready, try again");
-        }
-        this.isLoadingStatus$.next(false);
-      },
-      error: error => {
-        if (error.message) {
-          console.error('There was an error!', error.message);
-          window.alert(error.message);
-        } else {
-          console.error('There was an error!', error);
-          window.alert(error);
-        }
-        this.isReady$.next(false);
-        this.isLoadingStatus$.next(false);
-      }
-    });
+    this.isReady$.next(true);
+    this.isLoadingStatus$.next(false);
   }
 
   createProcess(searchData: SearchData) :void {
     this.resetData();
     this.isLoading$.next(true);
     this.item = JSON.parse(JSON.stringify(searchData))
+
+    // Extract video ID from YouTube URL
+    const videoId = this.extractVideoId(this.item.url);
+    if (!videoId) {
+      window.alert('Invalid YouTube URL. Please provide a valid YouTube video URL.');
+      this.isLoading$.next(false);
+      return;
+    }
+
     const params = {
-      format: this.item.type,
-      responseFormat: this.item.responseFormat,
-      lang: this.item.lang,
-      url: this.item.url
+      videoId: videoId
     }
     const headers = {
-      'X-RapidAPI-Key': '59fe1defa6msh9e272bf9f215112p1e2fcajsn2c3687b8684a',
-      'X-RapidAPI-Host': 't-one-youtube-converter.p.rapidapi.com'
+      'x-rapidapi-key': environment.rapidapi.key,
+      'x-rapidapi-host': environment.rapidapi.host
     }
     this.http.get<any>(this.item.urlBase, { headers, params }).subscribe({
       next: data => {
-        data.format = params.format;
-        this.guidId = data.guid;
-        this.detail$.next(data);
+        if (data.errorId !== 'Success') {
+          console.error('API Error:', data.errorId);
+          window.alert('Error: ' + data.errorId);
+          this.isLoading$.next(false);
+          return;
+        }
+
+        // Transform the new API response to match our existing structure
+        const transformedData = {
+          guid: data.id,
+          status: 'complete',
+          format: this.item.type,
+          total_percentage: 100,
+          YoutubeAPI: {
+            id: data.id,
+            titolo: data.title,
+            descrizione: data.description || '',
+            thumbUrl: data.thumbnails && data.thumbnails.length > 0
+              ? data.thumbnails[data.thumbnails.length - 1].url
+              : '',
+            durata_video: this.formatDuration(data.lengthSeconds),
+            duration_original: data.lengthSeconds,
+            definizione: '',
+            licenza: '',
+            urlMp3: this.item.type === 'mp3' && data.audios?.items?.length > 0
+              ? data.audios.items[0].url
+              : '',
+            urlVideo: this.item.type === 'video' && data.videos?.items?.length > 0
+              ? data.videos.items[0].url
+              : ''
+          },
+          // Store download URL directly
+          file: this.item.type === 'mp3' && data.audios?.items?.length > 0
+            ? data.audios.items[0].url
+            : this.item.type === 'video' && data.videos?.items?.length > 0
+            ? data.videos.items[0].url
+            : ''
+        };
+
+        this.guidId = data.id;
+        this.detail$.next(transformedData);
+        this.detailStatus$.next(transformedData);
         this.isLoading$.next(false);
       },
       error: error => {
@@ -88,11 +106,39 @@ export class DownloadFileService {
           window.alert(error.message);
         } else {
           console.error('There was an error!', error);
-          window.alert(error.message);
+          window.alert('An error occurred while fetching video details.');
         }
         this.isLoading$.next(false);
       }
     });
+  }
+
+  private extractVideoId(url: string): string | null {
+    // Handle different YouTube URL formats
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+      /youtube\.com\/embed\/([^&\n?#]+)/,
+      /youtube\.com\/v\/([^&\n?#]+)/
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    return null;
+  }
+
+  private formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 
   resetData(): void {

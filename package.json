@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:cloudflare": "cp src/environments/environment.prod.example.ts src/environments/environment.prod.ts && cp src/environments/environment.example.ts src/environments/environment.ts && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

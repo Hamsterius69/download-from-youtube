@@ -1,8 +1,21 @@
 # DownloadFromYoutube
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
+[![Angular](https://img.shields.io/badge/Angular-19-red.svg)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](package.json)
 
-A simple Angular application to download YouTube videos and audio (MP3) using the YouTube Media Downloader API from RapidAPI.
+A modern Angular application to download YouTube videos and audio (MP3) using the YouTube Media Downloader API from RapidAPI.
+
+## Features
+
+- 🎥 Download YouTube videos in various formats
+- 🎵 Extract audio as MP3
+- 🎨 Modern UI with TailwindCSS
+- 🔔 Toast notifications system
+- ⚡ Fast and responsive
+- 🧪 Unit tested (100% passing)
+- 🔒 Secure API key management
 
 ## Setup
 
@@ -30,26 +43,99 @@ cp src/environments/environment.prod.example.ts src/environments/environment.pro
 
 **Note:** Never commit your actual API keys to the repository. The `environment.ts` and `environment.prod.ts` files are ignored by git.
 
-## Development server
+**Important:** The demo uses a free API plan limited to 100 downloads per month.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Development
 
-## Code scaffolding
+### Development server
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng serve` or `npm start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Build
+### Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+### Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+### Watch mode
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Run `npm run watch` to build the project in watch mode with development configuration.
 
-## Further help
+## Technology Stack
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- **Angular**: 19.2.18
+- **TypeScript**: 5.8.3
+- **RxJS**: 7.5.0
+- **TailwindCSS**: 3.1.7
+- **Karma/Jasmine**: Unit testing framework
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── search/              # Search component with URL input
+│   ├── item-detail/         # Video details display
+│   ├── shared/
+│   │   └── components/
+│   │       └── toast/       # Toast notification component
+│   ├── services/
+│   │   └── notification.service.ts  # Notification management
+│   ├── utils/
+│   │   ├── url-parser.util.ts       # YouTube URL parsing
+│   │   └── time-formatter.util.ts   # Duration formatting
+│   └── download-file.service.ts     # API integration
+└── environments/            # Environment configurations
+```
+
+## Changelog
+
+### Version 2.0.0 (2026-01-13)
+
+**Major Updates:**
+- ⬆️ Upgraded from Angular 14 to Angular 19
+- ⬆️ Upgraded TypeScript from 4.7 to 5.8
+- 🔄 Migrated to modern HTTP providers system
+- 🔔 Added toast notification system (replaced window.alert)
+- 🧹 Removed unused dependencies (lodash)
+- ♻️ Refactored to BehaviorSubject pattern
+- 🛠️ Extracted utility functions for reusability
+- ✅ Updated all unit tests (5/5 passing)
+- 📝 Added MIT License
+- 🎨 Improved UI with better user feedback
+
+**Breaking Changes:**
+- Components now explicitly marked as `standalone: false`
+- HTTP module migrated to `provideHttpClient` pattern
+
+## API Limitations
+
+The free tier of YouTube Media Downloader API has the following limitations:
+- 100 requests per month
+- Rate limit may apply
+
+Consider upgrading to a paid plan for production use.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+**Ariel Aguilar**
+
+## Acknowledgments
+
+- [Angular Team](https://angular.io/) for the amazing framework
+- [RapidAPI](https://rapidapi.com/) for providing the YouTube Media Downloader API
+- [TailwindCSS](https://tailwindcss.com/) for the utility-first CSS framework

@@ -1,15 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { SearchComponent } from './search/search.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { FormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
+    declarations: [
+        AppComponent,
+        SearchComponent,
+        ItemDetailComponent,
+        ToastComponent
+    ],
+    imports: [FormsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   });
 
   it('should create the app', () => {

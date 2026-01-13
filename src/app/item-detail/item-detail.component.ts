@@ -3,9 +3,10 @@ import { DownloadFileService } from '../download-file.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-item-detail',
-  templateUrl: './item-detail.component.html',
-  styleUrls: ['./item-detail.component.css', '../app.component.css']
+    selector: 'app-item-detail',
+    templateUrl: './item-detail.component.html',
+    styleUrls: ['./item-detail.component.css', '../app.component.css'],
+    standalone: false
 })
 export class ItemDetailComponent implements OnInit {
   detail: any;

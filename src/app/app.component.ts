@@ -3,9 +3,10 @@ import { DownloadFileService } from './download-file.service';
 import { SearchData } from './search/searchData.model';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: false
 })
 
 export class AppComponent {

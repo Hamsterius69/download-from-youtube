@@ -48,4 +48,14 @@ export class ItemDetailComponent implements OnInit {
     this.downloadFileService.statusProcess();
   }
 
+  downloadFile() {
+    if (!this.detail || !this.detail.file) {
+      return;
+    }
+
+    // Open the file in a new tab
+    // User can then right-click and "Save as" to download
+    window.open(this.detail.file, '_blank');
+  }
+
 }

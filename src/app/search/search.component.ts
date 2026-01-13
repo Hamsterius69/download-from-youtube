@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { SearchData } from './searchData.model';
 import { DownloadFileService } from '../download-file.service';
+import { NotificationService } from '../services/notification.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,7 +15,10 @@ export class SearchComponent implements OnInit {
   isLoading: boolean
   isLoading$: Observable<boolean>;
 
-  constructor(private downloadFileService :DownloadFileService) {
+  constructor(
+    private downloadFileService: DownloadFileService,
+    private notificationService: NotificationService
+  ) {
     this.searchData = new SearchData('', 'video');
     this.isLoading = false;
     this.isLoading$ = this.downloadFileService.getIsLoading$();
@@ -24,7 +28,7 @@ export class SearchComponent implements OnInit {
     if (this.searchData.url) {
       this.downloadFileService.createProcess(this.searchData);
     } else {
-      window.alert('You must add an ULR');
+      this.notificationService.warning('You must add a URL');
     }
   }
 

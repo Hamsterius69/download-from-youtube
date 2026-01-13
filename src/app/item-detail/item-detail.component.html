@@ -11,7 +11,6 @@
       <img class='min-w-full min-h-full md:w-24 md:h-24' [src]='detail.YoutubeAPI.thumbUrl' alt='thumbUrl'>
       <div class="mt-2 text-center">
         <button *ngIf='isReady;else showPrepareBtn' Class='download-btn'>
-          <!-- <a [href]='detailStatus.file' download target='_blank'> -->
           <a [href]='detailStatus.file' download [target]='detail.format === "mp3" ? "": "_blank"'>
             <span *ngIf='detail.format === "mp3" ;else showDownloadViewBtn'> Download </span>
             <ng-template #showDownloadViewBtn>
@@ -37,12 +36,9 @@
     </div>
     <div class="row-span-5 col-span-2 ml-2 pr-4">
       <div>
-        <!-- <span class="font-bold"> Title: </span> -->
-        <!-- <span class="detail-text"> {{ detail.YoutubeAPI.titolo }} </span> -->
         <h2 class="mb-3"> {{ detail.YoutubeAPI.titolo }} </h2>
       </div>
       <div>
-        <!-- <span class="font-bold"> Description: </span> -->
         <span class="detail-text" [innerHtml]="detail.YoutubeAPI.descrizione"></span>
       </div>
     </div>

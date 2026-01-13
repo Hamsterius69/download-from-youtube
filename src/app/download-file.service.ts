@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
 import { SearchData, StatusProcess } from './search/searchData.model';
-import { Observable, Subject, map} from 'rxjs';
+import { Observable, BehaviorSubject, map} from 'rxjs';
 import { detail } from './item-detail/detail.model';
 import { HttpClient } from "@angular/common/http";
 import { environment } from '../environments/environment';
-import * as _ from 'lodash';
+import { extractVideoId } from './utils/url-parser.util';
+import { formatDuration } from './utils/time-formatter.util';
+import { NotificationService } from './services/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DownloadFileService {
 
-  private detail$ = new Subject<detail>();
-  private detailStatus$ = new Subject<detail>();
-  private isLoading$ = new Subject<boolean>();
-  private isLoadingStatus$ = new Subject<boolean>();
-  private isReady$ = new Subject<boolean>();
+  private detail$ = new BehaviorSubject<detail | null>(null);
+  private detailStatus$ = new BehaviorSubject<detail | null>(null);
+  private isLoading$ = new BehaviorSubject<boolean>(false);
+  private isLoadingStatus$ = new BehaviorSubject<boolean>(false);
+  private isReady$ = new BehaviorSubject<boolean>(false);
   item: SearchData;
   itemData: StatusProcess;
   guidId: string;
 
-  constructor(private http:HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private notificationService: NotificationService
+  ) {
     this.item = new SearchData('', '');
     this.itemData = new StatusProcess('');
     this.guidId = '';
@@ -40,9 +45,9 @@ export class DownloadFileService {
     this.item = JSON.parse(JSON.stringify(searchData))
 
     // Extract video ID from YouTube URL
-    const videoId = this.extractVideoId(this.item.url);
+    const videoId = extractVideoId(this.item.url);
     if (!videoId) {
-      window.alert('Invalid YouTube URL. Please provide a valid YouTube video URL.');
+      this.notificationService.error('Invalid YouTube URL. Please provide a valid YouTube video URL.');
       this.isLoading$.next(false);
       return;
     }
@@ -58,7 +63,7 @@ export class DownloadFileService {
       next: data => {
         if (data.errorId !== 'Success') {
           console.error('API Error:', data.errorId);
-          window.alert('Error: ' + data.errorId);
+          this.notificationService.error('Error: ' + data.errorId);
           this.isLoading$.next(false);
           return;
         }
@@ -76,7 +81,7 @@ export class DownloadFileService {
             thumbUrl: data.thumbnails && data.thumbnails.length > 0
               ? data.thumbnails[data.thumbnails.length - 1].url
               : '',
-            durata_video: this.formatDuration(data.lengthSeconds),
+            durata_video: formatDuration(data.lengthSeconds),
             duration_original: data.lengthSeconds,
             definizione: '',
             licenza: '',
@@ -103,73 +108,23 @@ export class DownloadFileService {
       error: error => {
         if (error.message) {
           console.error('There was an error!', error.message);
-          window.alert(error.message);
+          this.notificationService.error(error.message);
         } else {
           console.error('There was an error!', error);
-          window.alert('An error occurred while fetching video details.');
+          this.notificationService.error('An error occurred while fetching video details.');
         }
         this.isLoading$.next(false);
       }
     });
   }
 
-  private extractVideoId(url: string): string | null {
-    // Handle different YouTube URL formats
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-      /youtube\.com\/embed\/([^&\n?#]+)/,
-      /youtube\.com\/v\/([^&\n?#]+)/
-    ];
-
-    for (const pattern of patterns) {
-      const match = url.match(pattern);
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-    return null;
-  }
-
-  private formatDuration(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  }
-
   resetData(): void {
     this.isReady$.next(false);
     this.isLoading$.next(false);
     this.isLoadingStatus$.next(false);
-    /*
-    let auxYoutube = {
-      id: '',
-      definizione: '',
-      descrizione: '',
-      titolo: '',
-      thumbUrl: '',
-      licenza: '',
-      durata_video: '',
-      duration_original: '',
-      urlMp3: '',
-      urlVideo: '',
-    }
-    let auxDetail = {
-      status: '',
-      file: '',
-      total_percentage: 0,
-      YoutubeAPI: auxYoutube,
-    }
-    */
-    // this.detail$.next(auxDetail);
-    // this.detailStatus$.next(auxDetail);
   }
 
-  getDetail$(): Observable<detail> {
+  getDetail$(): Observable<detail | null> {
     return this.detail$.asObservable();
   }
 
@@ -181,7 +136,7 @@ export class DownloadFileService {
     return this.isLoadingStatus$.asObservable();
   }
 
-  getDetailStatus$(): Observable<detail> {
+  getDetailStatus$(): Observable<detail | null> {
     return this.detailStatus$.asObservable();
   }
 

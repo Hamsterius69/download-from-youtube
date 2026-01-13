@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { DownloadFileService } from './download-file.service';
 import { SearchComponent } from './search/search.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchComponent,
-    ItemDetailComponent
+    ItemDetailComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule

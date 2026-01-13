@@ -8,16 +8,29 @@ This guide explains how to deploy the YouTube Downloader application to Cloudfla
 - Git repository with your code
 - RapidAPI key for YouTube Media Downloader API
 
+## Important: Environment Files
+
+The API keys are stored in `environment.ts` and `environment.prod.ts` which are **ignored by git** for security.
+
+Example files are provided:
+- `src/environments/environment.example.ts`
+- `src/environments/environment.prod.example.ts`
+
+### Local Development Setup
+
+1. Copy example files:
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+cp src/environments/environment.prod.example.ts src/environments/environment.prod.ts
+```
+
+2. Edit both files and replace `YOUR_RAPIDAPI_KEY_HERE` with your actual RapidAPI key
+
+3. These files will NOT be committed to git (they're in `.gitignore`)
+
 ## Deployment Steps
 
-### 1. Prepare the Project
-
-The project is already configured for Cloudflare Pages deployment with:
-- Production build configuration in `angular.json`
-- `_redirects` file for SPA routing
-- Environment configuration for production
-
-### 2. Build for Production
+### 1. Build for Production Locally
 
 ```bash
 npm run build
@@ -25,7 +38,7 @@ npm run build
 
 This will create an optimized production build in the `dist/download-from-youtube` directory.
 
-### 3. Deploy to Cloudflare Pages
+### 2. Deploy to Cloudflare Pages
 
 #### Option A: Via Cloudflare Dashboard (Recommended)
 
@@ -35,11 +48,13 @@ This will create an optimized production build in the `dist/download-from-youtub
 4. Connect your Git repository (GitHub, GitLab, or Bitbucket)
 5. Configure the build settings:
    - **Project name**: `download-from-youtube` (or your preferred name)
-   - **Production branch**: `develop` (or `main`)
-   - **Build command**: `npm run build`
+   - **Production branch**: `develop` (or your main branch)
+   - **Build command**: `npm run build:cloudflare`
    - **Build output directory**: `dist/download-from-youtube`
    - **Root directory**: `/` (leave empty)
 6. Click **Save and Deploy**
+
+**IMPORTANT**: The `build:cloudflare` script automatically copies the example environment files during build. You'll need to update the example files with your actual API key before deploying.
 
 #### Option B: Via Wrangler CLI
 
@@ -50,31 +65,23 @@ npm install -g wrangler
 # Login to Cloudflare
 wrangler login
 
+# Build with Cloudflare script
+npm run build:cloudflare
+
 # Deploy
 wrangler pages deploy dist/download-from-youtube --project-name=download-from-youtube
 ```
 
-### 4. Environment Variables (Important!)
+### 3. Update API Key in Example Files
 
-The application uses RapidAPI for YouTube downloads. The API key is currently hardcoded in `src/environments/environment.prod.ts`.
+Before deploying, update the API key in the example files:
 
-**SECURITY NOTE**: For production, you should:
+1. Edit `src/environments/environment.prod.example.ts`
+2. Replace `YOUR_RAPIDAPI_KEY_HERE` with your actual RapidAPI key
+3. Commit and push to your repository
+4. Cloudflare will use these values during build
 
-1. Keep your API key secure
-2. Monitor your RapidAPI usage (free tier: 100 requests/month)
-3. Consider implementing rate limiting or user authentication
-
-**Current API Configuration**:
-- API: YouTube Media Downloader (RapidAPI)
-- Host: `youtube-media-downloader.p.rapidapi.com`
-- Free Tier Limit: 100 downloads/month
-
-### 5. Post-Deployment
-
-After deployment:
-1. Cloudflare will provide a URL like `https://download-from-youtube.pages.dev`
-2. You can configure a custom domain in the Cloudflare Pages settings
-3. HTTPS is enabled automatically
+**Alternative (More Secure)**: Keep placeholder values in example files and use Cloudflare Pages environment variables (requires build script modification).
 
 ## Build Configuration
 
@@ -85,7 +92,7 @@ The production build includes:
 - Output hashing for cache busting
 - Bundle size budgets:
   - Initial bundle: max 1MB (warning at 500KB)
-  - Component styles: max 4KB (warning at 2KB)
+  - Component styles: max 4KB (warning at 3KB)
 
 ### SPA Routing
 
@@ -96,6 +103,11 @@ The `_redirects` file ensures all routes are handled by the Angular app:
 
 This is automatically copied to the build output during the build process.
 
+### Build Scripts
+
+- `npm run build` - Standard production build (requires local environment files)
+- `npm run build:cloudflare` - Build for Cloudflare (copies example files first)
+
 ## Continuous Deployment
 
 If you connected a Git repository, Cloudflare Pages will automatically:
@@ -105,26 +117,39 @@ If you connected a Git repository, Cloudflare Pages will automatically:
 
 ## Troubleshooting
 
-### Build Fails
+### Build Fails with "Module not found: environment"
 
-If the build fails on Cloudflare:
-1. Check that Node.js version is compatible (recommended: 18.x or 20.x)
-2. Verify all dependencies are in `package.json`
-3. Check build logs in Cloudflare dashboard
+This means the environment files don't exist. Solutions:
+
+1. **For local builds**: Copy example files as described in "Local Development Setup"
+2. **For Cloudflare**: Use `npm run build:cloudflare` as the build command
+3. **Check**: Ensure example files exist in the repository
+
+### package-lock.json out of sync
+
+If you see errors about chokidar, readdirp, or yaml missing from lock file:
+
+```bash
+rm package-lock.json
+npm install
+git add package-lock.json
+git commit -m "Update package-lock.json"
+git push
+```
 
 ### Routing Issues
 
 If routes don't work after deployment:
-1. Verify `_redirects` file exists in build output
+1. Verify `_redirects` file exists in build output (`dist/download-from-youtube/_redirects`)
 2. Check Cloudflare Pages Functions configuration
 
 ### API Errors
 
 If downloads fail:
-1. Check RapidAPI subscription status
-2. Verify API key is correct in `environment.prod.ts`
-3. Check browser console for CORS or network errors
-4. Monitor API usage limits (100/month on free tier)
+1. Verify API key is correctly set in example files (for Cloudflare builds)
+2. Check RapidAPI subscription status
+3. Monitor API usage limits (100/month on free tier)
+4. Check browser console for CORS or network errors
 
 ## Performance
 
@@ -133,6 +158,24 @@ The production build is optimized for:
 - Efficient caching with output hashing
 - TailwindCSS for minimal CSS bundle
 - Lazy loading where possible
+
+## Security Notes
+
+### API Key Management
+
+**Current Implementation** (Simplified):
+- API keys are in example files that get copied during build
+- Example files are committed to repository
+- **Risk**: API keys are visible in public repositories
+
+**Recommendations**:
+1. Keep repository private if API key is in example files
+2. Monitor RapidAPI usage regularly
+3. Regenerate API key if compromised
+4. Consider implementing rate limiting in the frontend
+
+**Future Enhancement**:
+Implement Cloudflare Pages environment variables for true secret management (requires build script changes).
 
 ## Monitoring
 

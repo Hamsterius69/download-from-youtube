@@ -6,40 +6,43 @@
   <span id="text">LOADING...</span>
 </div>
 <ng-template #showDetail>
-  <div *ngIf='detail && detail.guid' class="grid grid-rows-3 grid-flow-col gap-1 p-8 mx-auto">
-    <div class="md:row-span-5">
-      <img class='min-w-full min-h-full md:w-24 md:h-24' [src]='detail.YoutubeAPI.thumbUrl' alt='thumbUrl'>
-      <div class="mt-2 text-center">
-        <button *ngIf='isReady;else showPrepareBtn' Class='download-btn'>
-          <a [href]='detailStatus.file' download [target]='detail.format === "mp3" ? "": "_blank"'>
-            <span *ngIf='detail.format === "mp3" ;else showDownloadViewBtn'> Download </span>
-            <ng-template #showDownloadViewBtn>
-              <span> Open to download </span>
-            </ng-template>
-          </a>
-        </button>
-        <ng-template #showPrepareBtn>
-          <button (click)='prepareDownload()' [disabled]='isLoadingStatus' class='prepare-btn'>
-            <div *ngIf='isLoadingStatus;else showBtn'>
-              <svg class="mr-1 h-4 w-4 inline animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25 mx-0 px-0" cx="12" text-black cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75 mx-0 px-0" text-black fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span class="text-xs">Loading</span>
-            </div>
-            <ng-template #showBtn>
-              <span> Prepare download </span>
-            </ng-template>
+  <div *ngIf='detail && detail.guid' class="w-full mt-8 mb-8">
+    <div class="flex flex-col md:flex-row gap-6 p-4 md:p-8 bg-white bg-opacity-70 rounded-lg shadow-lg mx-auto max-w-5xl">
+      <div class="flex flex-col items-center md:items-start md:w-64 flex-shrink-0">
+        <img class='w-full rounded-lg shadow-md' [src]='detail.YoutubeAPI.thumbUrl' alt='thumbUrl'>
+        <div class="mt-4 w-full">
+          <button *ngIf='isReady;else showPrepareBtn' class='download-btn w-full'>
+            <a [href]='detailStatus.file' download [target]='detail.format === "mp3" ? "": "_blank"'>
+              <span *ngIf='detail.format === "mp3"'> Download MP3 </span>
+              <span *ngIf='detail.format === "video"'> Download Video </span>
+            </a>
           </button>
-        </ng-template>
+          <ng-template #showPrepareBtn>
+            <button (click)='prepareDownload()' [disabled]='isLoadingStatus' class='prepare-btn w-full'>
+              <div *ngIf='isLoadingStatus;else showBtn'>
+                <svg class="mr-1 h-4 w-4 inline animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25 mx-0 px-0" cx="12" text-black cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75 mx-0 px-0" text-black fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-xs">Loading</span>
+              </div>
+              <ng-template #showBtn>
+                <span> Prepare download </span>
+              </ng-template>
+            </button>
+          </ng-template>
+          <p class='text-xs text-center text-gray-600 mt-2 px-2'>
+            Click to open in new tab, then right-click and "Save as" to download
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="row-span-5 col-span-2 ml-2 pr-4">
-      <div>
-        <h2 class="mb-3"> {{ detail.YoutubeAPI.titolo }} </h2>
-      </div>
-      <div>
-        <span class="detail-text" [innerHtml]="detail.YoutubeAPI.descrizione"></span>
+      <div class="flex-1 flex flex-col">
+        <div>
+          <h2 class="text-xl font-semibold mb-3 text-gray-800"> {{ detail.YoutubeAPI.titolo }} </h2>
+        </div>
+        <div class="flex-1 overflow-auto">
+          <span class="detail-text text-gray-700" [innerHtml]="detail.YoutubeAPI.descrizione"></span>
+        </div>
       </div>
     </div>
   </div>

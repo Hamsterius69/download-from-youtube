@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SearchData, StatusProcess } from './search/searchData.model';
-import { Observable, BehaviorSubject, map} from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { detail } from './item-detail/detail.model';
 import { HttpClient } from "@angular/common/http";
 import { environment } from '../environments/environment';
@@ -103,6 +103,7 @@ export class DownloadFileService {
         this.guidId = data.id;
         this.detail$.next(transformedData);
         this.detailStatus$.next(transformedData);
+        // Don't mark as ready yet - user needs to click "Prepare download" first
         this.isLoading$.next(false);
       },
       error: error => {

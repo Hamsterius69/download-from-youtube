@@ -1,23 +1,48 @@
-<div class='container mt-10'>
-  <input type='search' autocomplete='off' placeholder='URL youtube video' [(ngModel)]='searchData.url' (keydown.Enter)='updateURL()'
-         class='placeholder:italic placeholder:text-slate-400 focus:outline-none w-48 sm:w-80 leading-8 px-4 rounded' [disabled]='isLoading' />
-  <select [(ngModel)]='searchData.type' class='h-8 rounded ml-2' [disabled]='isLoading'>
-    <option value='video'>video</option>
-    <option value='mp3'>mp3</option>
-  </select>
-  <button (click)='updateURL()' [disabled]='isLoading' [class]='isLoading ? "custom-btn cursor-progress" : "custom-btn cursor-pointer"'>
-    <div *ngIf='isLoading;else showBtn'>
-      <svg class="mr-1 h-4 w-4 inline animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25 mx-0 px-0" cx="12" text-black cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75 mx-0 px-0" text-black fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs">Loading</span>
+<div class='w-full flex flex-col items-center justify-center mt-4 sm:mt-0'>
+  <div class='w-full max-w-2xl px-2'>
+    <div class='flex flex-col gap-2'>
+      <input type='search' autocomplete='off' placeholder='URL youtube video' [(ngModel)]='searchData.url' (keydown.Enter)='updateURL()'
+             class='placeholder:italic placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 w-full h-10 px-4 rounded border border-gray-300' [disabled]='isLoading' />
+      <div class='flex gap-2'>
+        <div class='custom-select-container flex-1'>
+          <button
+            type='button'
+            (click)='toggleDropdown()'
+            [disabled]='isLoading'
+            class='custom-select-button h-10 rounded px-3 border border-gray-300 w-full bg-white text-left flex items-center justify-between'
+            [class.disabled]='isLoading'>
+            <span>{{ selectedOption.label }}</span>
+            <svg class='w-4 h-4' [class.rotate-180]='isDropdownOpen' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+              <polyline points='6 9 12 15 18 9'></polyline>
+            </svg>
+          </button>
+          <div *ngIf='isDropdownOpen' class='custom-select-dropdown'>
+            <div
+              *ngFor='let option of options'
+              (click)='selectOption(option)'
+              class='custom-select-option'
+              [class.selected]='option.value === selectedOption.value'>
+              {{ option.label }}
+            </div>
+          </div>
+          <div *ngIf='isDropdownOpen' class='custom-select-backdrop' (click)='closeDropdown()'></div>
+        </div>
+        <button (click)='updateURL()' [disabled]='isLoading' [class]='isLoading ? "custom-btn cursor-progress" : "custom-btn cursor-pointer"' class='flex-1'>
+          <div *ngIf='isLoading;else showBtn'>
+            <svg class="mr-1 h-4 w-4 inline animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25 mx-0 px-0" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75 mx-0 px-0" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-xs">Loading</span>
+          </div>
+          <ng-template #showBtn>
+            <span> search </span>
+          </ng-template>
+        </button>
+      </div>
     </div>
-    <ng-template #showBtn>
-      <span> search </span>
-    </ng-template>
-  </button>
-  <div class='mt-3 text-center'>
+  </div>
+  <div class='mt-3 text-center w-full'>
     <p class='text-xs text-slate-500 italic'>
       Demo uses a free API plan limited to 100 downloads per month
     </p>

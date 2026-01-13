@@ -15,6 +15,12 @@ export class SearchComponent implements OnInit {
   searchData: SearchData;
   isLoading: boolean
   isLoading$: Observable<boolean>;
+  isDropdownOpen: boolean = false;
+  selectedOption: { value: string, label: string } = { value: 'video', label: 'video' };
+  options = [
+    { value: 'video', label: 'video' },
+    { value: 'mp3', label: 'mp3' }
+  ];
 
   constructor(
     private downloadFileService: DownloadFileService,
@@ -31,6 +37,22 @@ export class SearchComponent implements OnInit {
     } else {
       this.notificationService.warning('You must add a URL');
     }
+  }
+
+  toggleDropdown(): void {
+    if (!this.isLoading) {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    }
+  }
+
+  selectOption(option: { value: string, label: string }): void {
+    this.selectedOption = option;
+    this.searchData.type = option.value;
+    this.isDropdownOpen = false;
+  }
+
+  closeDropdown(): void {
+    this.isDropdownOpen = false;
   }
 
   ngOnInit(): void {

@@ -41,6 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment files (API keys are private)
-/src/environments/environment.ts
-/src/environments/environment.prod.ts
+# Environment files - local overrides only
+src/environments/environment.local.ts

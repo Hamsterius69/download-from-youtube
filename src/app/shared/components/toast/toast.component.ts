@@ -3,9 +3,10 @@ import { NotificationService, Notification } from '../../../services/notificatio
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-toast',
-  templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.css']
+    selector: 'app-toast',
+    templateUrl: './toast.component.html',
+    styleUrls: ['./toast.component.css'],
+    standalone: false
 })
 export class ToastComponent implements OnInit {
   notification$: Observable<Notification | null>;

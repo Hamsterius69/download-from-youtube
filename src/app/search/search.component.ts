@@ -5,9 +5,10 @@ import { NotificationService } from '../services/notification.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css', '../app.component.css']
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css', '../app.component.css'],
+    standalone: false
 })
 export class SearchComponent implements OnInit {
 

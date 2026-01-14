@@ -45,6 +45,9 @@ cp src/environments/environment.prod.example.ts src/environments/environment.pro
 
 **Important:** The demo uses a free API plan limited to 100 downloads per month.
 
+## Demo page
+👉 https://download-from-youtube.pages.dev/
+
 ## Development
 
 ### Development server
